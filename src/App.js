@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState, useEffect } from 'react';
+import { useFetch } from './useFetch';
+import Follower from './Follower';
 function App() {
+
+  const { loading, data } = useFetch();
+  const [page, setPage] = useState(0);
+  const [followers, setFollowers] = useState([]);
+
+  useEffect(() => {
+    if (loading) return
+    setFollowers(data[page]);    
+  }, [loading])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <main>
+      <div className="section-title">
+        <h1>{loading ? 'loading...' : 'pagination'}</h1>
+        <div className="underline"></div>
+      </div>
+      <section className="followers">
+        <div className="container">
+          {followers.map((follower) => {
+            return <Follower key={follower.id} {...follower} />
+          })}
+        </div>
+      </section>
+
+    </main>
+  )
 }
 
-export default App;
+export default App
